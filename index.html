@@ -1,0 +1,2131 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tristan Heusser — Engineering Design Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #070d1a;
+        --surface: #0b1221;
+        --surface2: #101828;
+        --surface3: #162035;
+        --text: #dde6f0;
+        --muted: #445566;
+        --muted2: #8899aa;
+        --cyan: #38bdf8;
+        --green: #34d399;
+        --pink: #f472b6;
+        --yellow: #fbbf24;
+        --purple: #a78bfa;
+        --border: rgba(56, 189, 248, 0.1);
+        --border2: rgba(56, 189, 248, 0.22);
+        --glow-c: rgba(56, 189, 248, 0.1);
+        --glow-p: rgba(167, 139, 250, 0.08);
+        /* strand colors */
+        --frame: #38bdf8;
+        --frame-dim: rgba(56, 189, 248, 0.07);
+        --diverge: #fbbf24;
+        --diverge-dim: rgba(251, 191, 36, 0.07);
+        --converge: #34d399;
+        --converge-dim: rgba(52, 211, 153, 0.07);
+        --represent: #f472b6;
+        --represent-dim: rgba(244, 114, 182, 0.07);
+        --nav-width: 210px;
+      }
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: "Inter", sans-serif;
+        font-weight: 300;
+        line-height: 1.7;
+        font-size: 14.5px;
+      }
+
+      /* ── NAV ─────────────────────────────────────── */
+      nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: var(--nav-width);
+        height: 100vh;
+        background: var(--surface);
+        border-right: 1px solid var(--border2);
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+        z-index: 100;
+      }
+      .nav-top-bar {
+        height: 2px;
+        background: linear-gradient(90deg, var(--cyan), var(--purple));
+        flex-shrink: 0;
+      }
+      .nav-logo {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 8.5px;
+        font-weight: 400;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--muted2);
+        padding: 1rem 1.1rem 0.9rem;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 0.75rem;
+      }
+      .nav-logo span {
+        display: block;
+        color: var(--cyan);
+        font-size: 10px;
+        margin-bottom: 0.2rem;
+        font-weight: 500;
+      }
+      .nav-label {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 8px;
+        color: var(--muted);
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        padding: 0.5rem 1.1rem 0.15rem;
+        display: block;
+      }
+      .nav-section {
+        padding: 0 0.5rem;
+        margin-bottom: 0.35rem;
+      }
+      .nav-link {
+        display: block;
+        padding: 0.28rem 0.6rem;
+        color: var(--muted2);
+        text-decoration: none;
+        font-family: "Inter", sans-serif;
+        font-size: 12px;
+        font-weight: 400;
+        border-radius: 2px;
+        transition: all 0.12s;
+        border-left: 2px solid transparent;
+      }
+      .nav-link:hover {
+        color: var(--text);
+        background: var(--frame-dim);
+      }
+      .nav-link.active {
+        color: var(--cyan);
+        background: var(--frame-dim);
+        border-left-color: var(--cyan);
+        font-weight: 500;
+      }
+      .nav-dot {
+        display: inline-block;
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        margin-right: 6px;
+        vertical-align: middle;
+        margin-top: -1px;
+      }
+
+      /* ── MAIN ────────────────────────────────────── */
+      main {
+        margin-left: var(--nav-width);
+        min-height: 100vh;
+      }
+
+      /* ── HERO ────────────────────────────────────── */
+      .hero {
+        padding: 3.5rem 4rem 3rem;
+        border-bottom: 1px solid var(--border2);
+        background: var(--surface);
+        position: relative;
+        overflow: hidden;
+      }
+      .hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(
+            ellipse 60% 80% at 80% 50%,
+            var(--glow-p),
+            transparent
+          ),
+          radial-gradient(
+            ellipse 40% 60% at 20% 20%,
+            var(--glow-c),
+            transparent
+          );
+        pointer-events: none;
+      }
+      .hero-tag {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 9.5px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--cyan);
+        margin-bottom: 1rem;
+        display: block;
+        font-weight: 400;
+      }
+      .hero h1 {
+        font-family: "Orbitron", sans-serif;
+        font-size: clamp(1.8rem, 3.2vw, 3.4rem);
+        font-weight: 900;
+        line-height: 1.08;
+        color: var(--text);
+        margin-bottom: 0.35rem;
+        letter-spacing: -0.01em;
+      }
+      .hero h1 em {
+        font-style: normal;
+        color: var(--cyan);
+      }
+      .hero-name {
+        font-family: "Inter", sans-serif;
+        font-size: 1rem;
+        font-weight: 500;
+        color: var(--text);
+        margin-bottom: 0.1rem;
+        opacity: 0.9;
+      }
+      .hero-sub {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 10px;
+        letter-spacing: 0.12em;
+        color: var(--muted2);
+        margin-bottom: 2rem;
+      }
+      .nav-guide {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1px;
+        background: var(--border2);
+        border: 1px solid var(--border2);
+        max-width: 720px;
+      }
+      .nav-guide-item {
+        background: var(--surface2);
+        padding: 0.7rem 0.9rem;
+        transition: background 0.12s;
+      }
+      .nav-guide-item:hover {
+        background: var(--surface3);
+      }
+      .nav-guide-item strong {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 8.5px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--cyan);
+        display: block;
+        margin-bottom: 0.25rem;
+        font-weight: 500;
+      }
+      .nav-guide-item p {
+        font-size: 11px;
+        color: var(--muted2);
+        line-height: 1.45;
+        margin: 0;
+      }
+
+      /* ── SECTIONS ────────────────────────────────── */
+      .sec {
+        padding: 3rem 4rem;
+        border-bottom: 1px solid var(--border);
+      }
+      .sec:nth-child(even) {
+        background: var(--surface);
+      }
+      .section-tag {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 9.5px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--cyan);
+        margin-bottom: 0.3rem;
+        display: block;
+        font-weight: 400;
+      }
+      h2 {
+        font-family: "Inter", sans-serif;
+        font-size: clamp(1.25rem, 2vw, 1.7rem);
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        color: var(--text);
+        margin-bottom: 1.5rem;
+        line-height: 1.25;
+      }
+      h4 {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 9px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--cyan);
+        margin-bottom: 0.4rem;
+        margin-top: 0;
+        font-weight: 400;
+      }
+      p {
+        margin-bottom: 0.85rem;
+        color: var(--muted2);
+        font-size: 13.5px;
+        line-height: 1.75;
+      }
+      p:last-child {
+        margin-bottom: 0;
+      }
+      em {
+        color: var(--cyan);
+        font-style: italic;
+      }
+      strong {
+        color: var(--text);
+        font-weight: 500;
+      }
+
+      /* ── LAYOUT ──────────────────────────────────── */
+      .two-col {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+        align-items: start;
+      }
+      .two-col-wide {
+        display: grid;
+        grid-template-columns: 3fr 2fr;
+        gap: 2.5rem;
+        align-items: start;
+      }
+
+      /* ── FIGURES / LIGHTBOX ──────────────────────── */
+      .figure {
+        background: var(--surface2);
+        border: 1px solid var(--border2);
+        overflow: hidden;
+        cursor: pointer;
+        position: relative;
+        transition: border-color 0.15s, box-shadow 0.15s;
+      }
+      .figure:hover {
+        border-color: var(--cyan);
+        box-shadow: 0 0 16px var(--glow-c);
+      }
+      .figure::after {
+        content: "⤢ VIEW FULL";
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 8.5px;
+        letter-spacing: 0.12em;
+        color: var(--cyan);
+        background: rgba(7, 13, 26, 0.88);
+        border: 1px solid var(--border2);
+        padding: 0.22rem 0.5rem;
+        opacity: 0;
+        transition: opacity 0.15s;
+        pointer-events: none;
+      }
+      .figure:hover::after {
+        opacity: 1;
+      }
+      .figure img {
+        width: 100%;
+        display: block;
+        max-height: 280px;
+        object-fit: cover;
+        transition: transform 0.25s;
+      }
+      .figure:hover img {
+        transform: scale(1.02);
+      }
+      .figure-placeholder {
+        height: 160px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        background: var(--surface3);
+        border-bottom: 1px solid var(--border);
+      }
+      .figure-placeholder-icon {
+        font-size: 1.5rem;
+        opacity: 0.2;
+      }
+      .figure-placeholder-text {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 9px;
+        color: var(--muted2);
+        letter-spacing: 0.08em;
+      }
+      .figure-caption {
+        padding: 0.55rem 0.8rem;
+        border-top: 1px solid var(--border);
+      }
+      .figure-caption strong {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 8.5px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--cyan);
+        display: block;
+        margin-bottom: 0.2rem;
+        font-weight: 500;
+      }
+      .figure-caption p {
+        font-size: 11px;
+        color: var(--muted2);
+        line-height: 1.5;
+        margin: 0;
+      }
+
+      /* Lightbox */
+      .lightbox {
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 1000;
+        background: rgba(4, 0, 14, 0.95);
+        align-items: center;
+        justify-content: center;
+        cursor: zoom-out;
+        backdrop-filter: blur(6px);
+      }
+      .lightbox.open {
+        display: flex;
+      }
+      .lightbox img {
+        max-width: 90vw;
+        max-height: 90vh;
+        object-fit: contain;
+        border: 1px solid var(--border2);
+        box-shadow: 0 0 60px var(--glow-c);
+      }
+      .lightbox-close {
+        position: absolute;
+        top: 1.5rem;
+        right: 1.5rem;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 10px;
+        letter-spacing: 0.14em;
+        color: var(--text);
+        cursor: pointer;
+        background: var(--surface2);
+        border: 1px solid var(--border2);
+        padding: 0.35rem 0.8rem;
+        font-weight: 400;
+        transition: border-color 0.12s;
+      }
+      .lightbox-close:hover {
+        border-color: var(--cyan);
+        color: var(--cyan);
+      }
+      .lightbox-caption {
+        position: absolute;
+        bottom: 2rem;
+        left: 50%;
+        transform: translateX(-50%);
+        font-family: "Inter", sans-serif;
+        font-size: 11px;
+        color: var(--muted2);
+        text-align: center;
+        white-space: nowrap;
+      }
+
+      /* ── PROJECT ─────────────────────────────────── */
+      .project-header {
+        display: flex;
+        align-items: center;
+        gap: 1.25rem;
+        margin-bottom: 1.25rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--border2);
+      }
+      .project-num {
+        font-family: "Orbitron", sans-serif;
+        font-size: 3.5rem;
+        font-weight: 900;
+        color: var(--cyan);
+        line-height: 1;
+        opacity: 0.18;
+        user-select: none;
+        letter-spacing: -0.05em;
+      }
+      .project-label {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 9px;
+        letter-spacing: 0.18em;
+        color: var(--cyan);
+        text-transform: uppercase;
+        margin-bottom: 0.15rem;
+        font-weight: 400;
+      }
+      .project-title {
+        font-family: "Inter", sans-serif;
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--text);
+        letter-spacing: -0.02em;
+      }
+
+      /* ── PROJECT BODY (summary left, figures right) ── */
+      .project-body {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+        align-items: start;
+        margin-bottom: 1.25rem;
+      }
+      .project-figures {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      @media (max-width: 900px) {
+        .project-body {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* ── SUMMARY GRID ────────────────────────────── */
+      .summary-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1px;
+        background: var(--border2);
+        border: 1px solid var(--border2);
+      }
+      .summary-cell {
+        background: var(--surface2);
+        padding: 0.9rem 1.1rem;
+      }
+      .summary-cell.full {
+        grid-column: 1/-1;
+      }
+      .summary-cell h4 {
+        margin-top: 0;
+        margin-bottom: 0.4rem;
+      }
+      .summary-cell p,
+      .summary-cell ul {
+        font-size: 12.5px;
+        color: var(--muted2);
+        margin: 0;
+        line-height: 1.55;
+      }
+      .summary-cell ul {
+        padding-left: 1.1rem;
+      }
+      .summary-cell li {
+        margin-bottom: 0.3rem;
+      }
+
+      /* ── ANNOTATION ──────────────────────────────── */
+      .annotation-block {
+        background: var(--surface2);
+        border-left: 2px solid var(--cyan);
+        padding: 1.1rem 1.4rem;
+        margin-top: 1.25rem;
+        box-shadow: inset 3px 0 12px rgba(0, 229, 255, 0.05);
+      }
+      .annotation-label {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 9px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--cyan);
+        display: block;
+        margin-bottom: 0.6rem;
+        font-weight: 400;
+      }
+      .annotation-block p {
+        font-size: 13px;
+        color: var(--muted2);
+        margin-bottom: 0.65rem;
+      }
+      .annotation-block p:last-child {
+        margin-bottom: 0;
+      }
+
+      /* ── CTMF 2×2 GRID ──────────────────────────── */
+      .ctmf-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        border-bottom: 1px solid var(--border);
+      }
+      .ctmf-grid .sec {
+        border-bottom: none;
+        border-right: 1px solid var(--border);
+      }
+      .ctmf-grid .sec:nth-child(even) {
+        border-right: none;
+        background: none;
+      }
+      .ctmf-grid .sec:nth-child(1),
+      .ctmf-grid .sec:nth-child(2) {
+        border-bottom: 1px solid var(--border);
+      }
+
+      @media (max-width: 900px) {
+        .ctmf-grid {
+          grid-template-columns: 1fr;
+        }
+        .ctmf-grid .sec {
+          border-right: none;
+          border-bottom: 1px solid var(--border);
+        }
+        .ctmf-grid .sec:last-child {
+          border-bottom: none;
+        }
+      }
+
+      /* ── STRAND SECTIONS ─────────────────────────── */
+      .strand-frame {
+        border-left: 3px solid var(--frame);
+      }
+      .strand-diverge {
+        border-left: 3px solid var(--diverge);
+      }
+      .strand-converge {
+        border-left: 3px solid var(--converge);
+      }
+      .strand-represent {
+        border-left: 3px solid var(--represent);
+      }
+
+      .strand-frame .ctmf-card {
+        border-left: 2px solid var(--frame);
+      }
+      .strand-diverge .ctmf-card {
+        border-left: 2px solid var(--diverge);
+      }
+      .strand-converge .ctmf-card {
+        border-left: 2px solid var(--converge);
+      }
+      .strand-represent .ctmf-card {
+        border-left: 2px solid var(--represent);
+      }
+
+      .strand-frame .assessment-box {
+        border-left-color: var(--frame);
+      }
+      .strand-diverge .assessment-box {
+        border-left-color: var(--diverge);
+      }
+      .strand-converge .assessment-box {
+        border-left-color: var(--converge);
+      }
+      .strand-represent .assessment-box {
+        border-left-color: var(--represent);
+      }
+
+      .strand-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+      }
+      .strand-pill {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 9px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        padding: 0.26rem 0.65rem;
+        font-weight: 500;
+        border: 1px solid;
+        white-space: nowrap;
+      }
+      .strand-frame .strand-pill {
+        background: var(--frame-dim);
+        color: var(--frame);
+        border-color: rgba(56, 189, 248, 0.35);
+      }
+      .strand-diverge .strand-pill {
+        background: var(--diverge-dim);
+        color: var(--diverge);
+        border-color: rgba(251, 191, 36, 0.35);
+      }
+      .strand-converge .strand-pill {
+        background: var(--converge-dim);
+        color: var(--converge);
+        border-color: rgba(52, 211, 153, 0.35);
+      }
+      .strand-represent .strand-pill {
+        background: var(--represent-dim);
+        color: var(--represent);
+        border-color: rgba(244, 114, 182, 0.35);
+      }
+
+      .strand-title {
+        font-family: "Inter", sans-serif;
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: var(--text);
+        letter-spacing: -0.02em;
+      }
+
+      /* ── CTMF CARDS ──────────────────────────────── */
+      .ctmf-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        padding: 1.1rem 1.3rem;
+        margin-bottom: 0.75rem;
+        transition: border-color 0.15s, background 0.15s;
+      }
+      .ctmf-card:last-child {
+        margin-bottom: 0;
+      }
+      .ctmf-card:hover {
+        background: var(--surface2);
+        border-color: var(--border2);
+      }
+      .ctmf-num {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 9px;
+        letter-spacing: 0.16em;
+        color: var(--muted2);
+        margin-bottom: 0.1rem;
+        font-weight: 400;
+      }
+      .ctmf-name {
+        font-family: "Inter", sans-serif;
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 0.75rem;
+        letter-spacing: -0.01em;
+      }
+      .ctmf-label {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 8.5px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--muted2);
+        display: block;
+        margin-top: 0.75rem;
+        margin-bottom: 0.25rem;
+        font-weight: 400;
+      }
+      .ctmf-body {
+        font-size: 13px;
+        color: var(--muted2);
+        line-height: 1.65;
+      }
+      .evidence-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+      .evidence-list li {
+        font-size: 12.5px;
+        color: var(--muted2);
+        padding: 0.3rem 0;
+        border-bottom: 1px solid var(--border);
+        line-height: 1.55;
+      }
+      .evidence-list li:last-child {
+        border-bottom: none;
+      }
+      .evidence-list li strong {
+        color: var(--text);
+        font-weight: 500;
+      }
+      .fig-ref {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 9px;
+        color: var(--cyan);
+        text-decoration: none;
+        border: 1px solid var(--border2);
+        padding: 0.04rem 0.3rem;
+        margin-left: 0.25rem;
+        white-space: nowrap;
+        transition: all 0.12s;
+        font-weight: 400;
+      }
+      .fig-ref:hover {
+        background: var(--frame-dim);
+      }
+      .assessment-box {
+        background: var(--surface2);
+        border: 1px solid var(--border);
+        border-left: 2px solid var(--cyan);
+        padding: 0.7rem 0.95rem;
+        margin-top: 0.35rem;
+      }
+      .assessment-box p {
+        font-size: 13px;
+        color: var(--muted2);
+        margin: 0;
+        line-height: 1.65;
+      }
+
+      /* ── REFLECTION ──────────────────────────────── */
+      .reflection-text {
+        max-width: 68ch;
+      }
+      .reflection-text p {
+        font-size: 13.5px;
+        line-height: 1.8;
+        color: var(--muted2);
+        margin-bottom: 0.9rem;
+      }
+      .reflection-text p:first-child {
+        font-family: "Inter", sans-serif;
+        font-size: 1rem;
+        font-weight: 500;
+        color: var(--text);
+        line-height: 1.65;
+        border-left: 2px solid var(--cyan);
+        padding-left: 1.1rem;
+      }
+      .reflection-text em {
+        color: var(--cyan);
+      }
+
+      /* ── REFERENCES ──────────────────────────────── */
+      .ref-item {
+        display: flex;
+        gap: 1rem;
+        padding: 0.55rem 0;
+        border-bottom: 1px solid var(--border);
+        align-items: baseline;
+      }
+      .ref-num {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 9.5px;
+        color: var(--cyan);
+        min-width: 18px;
+        font-weight: 400;
+      }
+      .placeholder-ref {
+        font-size: 13px;
+        color: var(--muted2);
+        font-style: italic;
+        opacity: 0.7;
+      }
+
+      /* ── ANIMATIONS ──────────────────────────────── */
+      .fade-in {
+        opacity: 0;
+        transform: translateY(14px);
+        transition: opacity 0.5s ease, transform 0.5s ease;
+      }
+      .fade-in.visible {
+        opacity: 1;
+        transform: none;
+      }
+
+      /* ── MOBILE ──────────────────────────────────── */
+      @media (max-width: 900px) {
+        nav {
+          display: none;
+        }
+        main {
+          margin-left: 0;
+        }
+        .sec,
+        .hero {
+          padding: 2rem 1.25rem;
+        }
+        .two-col,
+        .two-col-wide,
+        .summary-grid,
+        .nav-guide {
+          grid-template-columns: 1fr;
+        }
+        .summary-cell.full {
+          grid-column: 1;
+        }
+        .project-num {
+          font-size: 2.5rem;
+        }
+        .nav-guide {
+          max-width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- LIGHTBOX -->
+    <div class="lightbox" id="lightbox">
+      <span class="lightbox-close" onclick="closeLightbox()">[ CLOSE × ]</span>
+      <img id="lightbox-img" src="" alt="" />
+      <div class="lightbox-caption" id="lightbox-caption"></div>
+    </div>
+
+    <nav>
+      <div class="nav-top-bar"></div>
+      <div class="nav-logo">
+        <span>ESC102 · 2026</span>
+        Engineering Design Portfolio
+      </div>
+      <div class="nav-section">
+        <span class="nav-label">// Overview</span>
+        <a class="nav-link" href="#intro">Introduction</a>
+        <a class="nav-link" href="#position">Position in Context</a>
+      </div>
+      <div class="nav-section">
+        <span class="nav-label">// Projects</span>
+        <a class="nav-link" href="#praxis1">Praxis I: Wrap Container</a>
+        <a class="nav-link" href="#civ102">CIV102: Bridge Design</a>
+        <a class="nav-link" href="#praxis2">Praxis II: Climbing Tool</a>
+      </div>
+      <div class="nav-section">
+        <span class="nav-label">// CTMFs</span>
+        <a class="nav-link" href="#frame"
+          ><span
+            class="nav-dot"
+            style="background: var(--frame); box-shadow: 0 0 5px var(--frame)"
+          ></span
+          >Frame</a
+        >
+        <a class="nav-link" href="#diverge"
+          ><span
+            class="nav-dot"
+            style="
+              background: var(--diverge);
+              box-shadow: 0 0 5px var(--diverge);
+            "
+          ></span
+          >Diverge</a
+        >
+        <a class="nav-link" href="#converge"
+          ><span
+            class="nav-dot"
+            style="
+              background: var(--converge);
+              box-shadow: 0 0 5px var(--converge);
+            "
+          ></span
+          >Converge</a
+        >
+        <a class="nav-link" href="#represent"
+          ><span
+            class="nav-dot"
+            style="
+              background: var(--represent);
+              box-shadow: 0 0 5px var(--represent);
+            "
+          ></span
+          >Represent</a
+        >
+      </div>
+      <div class="nav-section">
+        <span class="nav-label">// Closing</span>
+        <a class="nav-link" href="#reflection">Final Reflection</a>
+        <a class="nav-link" href="#references">References</a>
+      </div>
+    </nav>
+
+    <main>
+      <!-- HERO -->
+      <div class="hero" id="intro">
+        <span class="hero-tag"
+          >Engineering Science · Praxis II · University of Toronto · 2026</span
+        >
+        <h1>Student Engineer<br /><em>Design Portfolio</em></h1>
+        <p class="hero-name">Tristan Heusser</p>
+        <p class="hero-sub">ESC102 · 2025–2026</p>
+        <div class="nav-guide">
+          <div class="nav-guide-item">
+            <strong>Position in Context</strong>
+            <p>Start here — the lens through which every section is written.</p>
+          </div>
+          <div class="nav-guide-item">
+            <strong>Project Summaries</strong>
+            <p>Three design projects with annotated process reflections.</p>
+          </div>
+          <div class="nav-guide-item">
+            <strong>CTMFs</strong>
+            <p>Color-coded by strand: Frame, Diverge, Converge, Represent.</p>
+          </div>
+          <div class="nav-guide-item">
+            <strong>Final Reflection</strong>
+            <p>Lessons learned and how my practice has changed.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- POSITION -->
+      <div class="sec fade-in" id="position">
+        <span class="section-tag">// Position in Context</span>
+        <h2>My Approach to Engineering Design</h2>
+        <div class="two-col-wide">
+          <div>
+            <p>
+              I approach engineering design with the expectation that
+              assumptions may fail, and I prioritize adaptability, observation,
+              and hands-on iteration to respond effectively when they do.
+            </p>
+            <p>
+              My design process begins by observing user behaviour, physical
+              systems, the natural world, and an effort to connect these
+              observations across fields. This often produces unconventional
+              ideas. I share them with my team, even when they seem impractical,
+              because I believe the most valuable ideas are frequently the ones
+              dismissed first. This positions me as a divergent contributor:
+              someone who expands the solution space before convergence begins.
+            </p>
+            <p>
+              I rely heavily on prototyping and real-world testing to evaluate
+              designs. This reflects one of my core beliefs: that analytical
+              models are not complete representations of reality. The CIV102
+              bridge project demonstrated this directly — our structural
+              analysis was rigorous and the mathematics aligned, but the bridge
+              failed at its supports, a boundary condition our models did not
+              adequately represent. This experience refined how I use analytical
+              tools. I now treat analysis as a tool for narrowing the design
+              space, not for finalizing a design.
+            </p>
+            <p>
+              At the same time, I aim to remain composed when systems fail.
+              While running a robotics workshop for younger students, I
+              encountered an issue: the robot could not distinguish between
+              similar colours under classroom lighting. Rather than modifying
+              the sensor, I modified the environment itself — replacing the
+              floor surface with higher-contrast paper so the robot's existing
+              colour sensor could function reliably.
+            </p>
+            <p>
+              This experience offered a valuable insight: constraints are often
+              easier to reframe than to solve directly. The wise choice is not
+              always to solve the problem in front of you — ask whether it is
+              the right problem.
+            </p>
+            <p>
+              Ultimately, I design to improve people's day-to-day experiences,
+              measuring success by how effectively a solution serves real users
+              in real conditions.
+            </p>
+          </div>
+          <div>
+            <div
+              class="figure"
+              onclick="openLightbox('images/fig1.jpg','Figure 1: Robotics Workshop Floor Modification')"
+            >
+              <img
+                src="images/fig1.jpg"
+                alt="Robotics workshop floor modification"
+                onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"
+              />
+              <div class="figure-placeholder" style="display: none">
+                <div class="figure-placeholder-icon">📷</div>
+                <div class="figure-placeholder-text">images/fig1.jpg</div>
+              </div>
+              <div class="figure-caption">
+                <strong>Figure 1 — Robotics Workshop Floor Modification</strong>
+                <p>
+                  High-contrast paper replacement that restored reliable colour
+                  detection without any hardware modification.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROJECT 1 -->
+      <div class="sec fade-in" id="praxis1">
+        <div class="project-header">
+          <div class="project-num">01</div>
+          <div>
+            <div class="project-label">// Praxis I</div>
+            <div class="project-title">Wrap Container Design</div>
+          </div>
+        </div>
+        <div class="project-body">
+          <div class="summary-grid">
+            <div class="summary-cell">
+              <h4>Context</h4>
+              <p>
+                Students frequently eat wraps while studying, leading to
+                spillage and inconvenience in academic environments around U of
+                T campus. Existing solutions are messy to open, do not allow
+                multitasking, and leave residue at the bottom.
+              </p>
+            </div>
+            <div class="summary-cell">
+              <h4>Objective</h4>
+              <p>
+                Design a wrap container that minimizes spillage while remaining
+                practical and easy to use for students in study environments.
+              </p>
+            </div>
+            <div class="summary-cell">
+              <h4>Team Contributions</h4>
+              <p>
+                Team of four Engineering Science students. Teammates contributed
+                the lipstick-inspired sliding mechanism and the
+                elevator-inspired design. I contributed the banana-sombrero
+                concept and found alternate materials for proxy testing.
+              </p>
+            </div>
+            <div class="summary-cell">
+              <h4>Outcome</h4>
+              <p>
+                Sandwurm prototypes demonstrated improved usability and reduced
+                spillage. The cone mechanism allowed users to eat
+                single-handedly without risk of spillage over notes or laptops.
+              </p>
+            </div>
+            <div class="summary-cell full">
+              <h4>Approach</h4>
+              <ul>
+                <li>
+                  Used 6-3-5 brainwriting to generate a wide range of concepts
+                  across the team
+                </li>
+                <li>
+                  Developed the banana-sombrero concept, inspired by the natural
+                  mechanics of peeling a banana
+                </li>
+                <li>
+                  Tested prototypes by simulating wraps using rocks (solids) and
+                  oobleck (sauce) for rapid iteration without food waste
+                </li>
+                <li>
+                  Converged on the sandwurm design: a sliding sleeve the user
+                  pushes down over the wrap as they eat, with a cone-shaped
+                  attachment at the top to catch spillage
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="project-figures">
+            <div
+              class="figure"
+              onclick="openLightbox('images/fig2.jpg','Figure 2: Sandwurm Final Prototype')"
+            >
+              <img
+                src="images/fig2.jpg"
+                alt="Sandwurm final prototype"
+                onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"
+              />
+              <div class="figure-placeholder" style="display: none">
+                <div class="figure-placeholder-icon">📷</div>
+                <div class="figure-placeholder-text">images/fig2.jpg</div>
+              </div>
+              <div class="figure-caption">
+                <strong>Figure 2 — Sandwurm Final Prototype</strong>
+                <p>
+                  Sleeve in the raised position before eating begins. The user
+                  progressively lowers it while the cone attachment catches
+                  spillage from above.
+                </p>
+              </div>
+            </div>
+            <div
+              class="figure"
+              onclick="openLightbox('images/fig3.jpg','Figure 3: 6-3-5 Brainwriting Sheet')"
+            >
+              <img
+                src="images/fig3.jpg"
+                alt="6-3-5 brainwriting sheet"
+                onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"
+              />
+              <div class="figure-placeholder" style="display: none">
+                <div class="figure-placeholder-icon">📷</div>
+                <div class="figure-placeholder-text">images/fig3.jpg</div>
+              </div>
+              <div class="figure-caption">
+                <strong>Figure 3 — 6-3-5 Brainwriting Sheet</strong>
+                <p>
+                  Brainwriting output showing banana-sombrero, lipstick-sliding,
+                  and elevator concepts, each annotated to show the mechanical
+                  logic it contributed to the final sandwurm design.
+                </p>
+              </div>
+            </div>
+            <div
+              class="figure"
+              onclick="openLightbox('images/fig4.jpg','Figure 4: Rock + Oobleck Testing Setup')"
+            >
+              <img
+                src="images/fig4.jpg"
+                alt="Surrogate testing setup"
+                onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"
+              />
+              <div class="figure-placeholder" style="display: none">
+                <div class="figure-placeholder-icon">📷</div>
+                <div class="figure-placeholder-text">images/fig4.jpg</div>
+              </div>
+              <div class="figure-caption">
+                <strong>Figure 4 — Rock + Oobleck Testing Setup</strong>
+                <p>
+                  Rock inside a burrito wrap and oobleck applied to simulate
+                  sauce spillage. Spillage was captured beneath the prototype
+                  and compared across designs by coverage area.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="annotation-block">
+          <span class="annotation-label">// Annotation</span>
+          <p>
+            This project is where I first became aware of the importance of
+            generating ideas without immediately evaluating them. The
+            banana-sombrero concept emerged from observing how a banana peel
+            separates from the fruit. The 6-3-5 brainwriting session made space
+            for it, as well as for the lipstick and elevator concepts my
+            teammates contributed.
+          </p>
+          <p>
+            A meaningful decision in this project was to use reusable materials
+            for testing. Rather than accepting the assumption that real food was
+            necessary for meaningful testing, I proposed using rocks to mimic
+            solids and oobleck to mimic sauce, allowing rapid iteration across
+            multiple trials with consistent materials and little waste.
+          </p>
+          <p>
+            The final sandwurm design was not any single person's idea. The
+            sliding mechanism was inspired by a teammate's elevator concept; the
+            cone attachment emerged from another team member; the geometry of
+            the bottom was refined through iteration. This convergence worked
+            because the team built on each other's contributions rather than
+            selecting among them.
+          </p>
+          <p>
+            However, this project revealed a weakness I recognized during my
+            second semester: I spent more time exploring ideas than documenting
+            the reasoning behind convergence decisions. By Praxis II, I changed
+            this approach — a pattern I return to in the Final Reflection.
+          </p>
+        </div>
+      </div>
+
+      <!-- PROJECT 2 -->
+      <div class="sec fade-in" id="civ102">
+        <div class="project-header">
+          <div class="project-num">02</div>
+          <div>
+            <div class="project-label">// CIV102</div>
+            <div class="project-title">Bridge Design</div>
+          </div>
+        </div>
+        <div class="project-body">
+          <div class="summary-grid">
+            <div class="summary-cell">
+              <h4>Context</h4>
+              <p>
+                Design and construct a matboard bridge to maximize load capacity
+                under standardized test conditions with fixed span and material
+                constraints.
+              </p>
+            </div>
+            <div class="summary-cell">
+              <h4>Objective</h4>
+              <p>
+                Optimize structural performance using analytical modelling and
+                mathematical calculations, producing a bridge that maximizes
+                load-to-weight ratio within material limits.
+              </p>
+            </div>
+            <div class="summary-cell">
+              <h4>Team Contributions</h4>
+              <p>
+                Team of three Engineering Science students. Teammates found and
+                adapted existing structural analysis code for shear and moment
+                envelope calculations. I contributed to cross-section selection
+                and led parts of the physical construction.
+              </p>
+            </div>
+            <div class="summary-cell">
+              <h4>Outcome</h4>
+              <p>
+                The bridge withstood approximately 400N before failure due to
+                sliding off its support platforms rather than structural
+                collapse. The internal structure performed as designed. The
+                connection to the supports did not.
+              </p>
+            </div>
+            <div class="summary-cell full">
+              <h4>Approach</h4>
+              <ul>
+                <li>
+                  Each team member independently explored different
+                  cross-section geometries through parallel concept development
+                </li>
+                <li>
+                  Used shear and moment envelope calculations to identify
+                  critical load locations and guide cross-section selection
+                </li>
+                <li>
+                  Selected a hollow box cross-section for end spans and two
+                  vertical legs for the middle span, optimizing for moment and
+                  shear distributions
+                </li>
+                <li>
+                  Constructed and tested a physical prototype under progressive
+                  loading
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="project-figures">
+            <div
+              class="figure"
+              onclick="openLightbox('images/fig5.jpg','Figure 5: Bridge Load Test and Failure')"
+            >
+              <img
+                src="images/fig5.jpg"
+                alt="Bridge load test and failure"
+                onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"
+              />
+              <div class="figure-placeholder" style="display: none">
+                <div class="figure-placeholder-icon">📷</div>
+                <div class="figure-placeholder-text">images/fig5.jpg</div>
+              </div>
+              <div class="figure-caption">
+                <strong>Figure 5 — Bridge Load Test and Failure</strong>
+                <p>
+                  The matboard bridge under progressive loading. The internal
+                  structure remained intact, confirming the failure mode was
+                  external to the analytical model.
+                </p>
+              </div>
+            </div>
+            <div
+              class="figure"
+              onclick="openLightbox('images/fig6.jpg','Figure 6: Envelope Calculations and Cross-Section Sketches')"
+            >
+              <img
+                src="images/fig6.jpg"
+                alt="Envelope calculations and cross-section sketches"
+                onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"
+              />
+              <div class="figure-placeholder" style="display: none">
+                <div class="figure-placeholder-icon">📷</div>
+                <div class="figure-placeholder-text">images/fig6.jpg</div>
+              </div>
+              <div class="figure-caption">
+                <strong
+                  >Figure 6 — Envelope Calculations and Cross-Section
+                  Sketches</strong
+                >
+                <p>
+                  Shear and moment envelope diagrams alongside annotated
+                  cross-section sketches for the end spans (hollow box) and
+                  middle span (two vertical legs).
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="annotation-block">
+          <span class="annotation-label">// Annotation</span>
+          <p>
+            Our structural analysis was thorough: envelope calculations drove
+            every major cross-section decision, and the relationship between
+            geometry and load resistance was well understood before we built
+            anything.
+          </p>
+          <p>
+            The bridge did not fail internally; it slid off its supports. The
+            problem was not that we used analytical tools incorrectly. It was
+            that we treated the analysis as a complete model of the system when
+            it was only a model of part of the system. The supports, the
+            friction conditions at the resting platform, and the geometry of the
+            bridge ends were treated as boundary conditions to be assumed rather
+            than variables to be designed for.
+          </p>
+          <p>
+            Comparing this to Praxis I: in both projects, my preferred approach
+            worked well within its domain and left gaps at the edges. I go deep
+            into the well-defined part of the problem and underspecify the
+            edges. The correction I now apply is a question asked explicitly at
+            the end of any analytical phase:
+            <em
+              >What have we not modelled, and what are the limitations of what
+              we have?</em
+            >
+          </p>
+        </div>
+      </div>
+
+      <!-- PROJECT 3 -->
+      <div class="sec fade-in" id="praxis2">
+        <div class="project-header">
+          <div class="project-num">03</div>
+          <div>
+            <div class="project-label">// Praxis II</div>
+            <div class="project-title">Climbing Hold Cleaning Tool</div>
+          </div>
+        </div>
+        <div class="project-body">
+          <div class="summary-grid">
+            <div class="summary-cell">
+              <h4>Context</h4>
+              <p>
+                Climbing holds accumulate chalk and debris during use, reducing
+                grip quality and user safety. Existing solutions require
+                removing holds (not feasible between climbs), or use a
+                fixed-head brush that does not account for variability in hold
+                geometry.
+              </p>
+            </div>
+            <div class="summary-cell">
+              <h4>Objective</h4>
+              <p>
+                Design a tool that allows holds to be cleaned efficiently
+                between climbs, without disturbing the natural atmosphere of the
+                climbing gym.
+              </p>
+            </div>
+            <div class="summary-cell">
+              <h4>Team Contributions</h4>
+              <p>
+                Team of four Engineering Science students. Teammates proposed
+                the electric motor concept, the wall-scaling robot concept, and
+                a car-wash system. I proposed the exchangeable heads solution
+                and their integration with a telescoping pole and electric
+                motor.
+              </p>
+            </div>
+            <div class="summary-cell">
+              <h4>Outcome</h4>
+              <p>
+                The final prototype cleaned over 90% of chalk, took under 10
+                seconds to set up, and had a decibel rating lower than the gym's
+                ambient noise (~55 dB).
+              </p>
+            </div>
+            <div class="summary-cell full">
+              <h4>Approach</h4>
+              <ul>
+                <li>
+                  Reframed the problem from "how do we clean climbing holds" to
+                  "how do we clean holds between climbs"
+                </li>
+                <li>
+                  Explored three parallel directions: a tripod-mounted device,
+                  an electric toothbrush design, and the exchangeable heads
+                  concept
+                </li>
+                <li>
+                  Converged on an integrated solution: an electric motor
+                  combined with a telescoping pole, with interchangeable
+                  cleaning heads for different hold geometries
+                </li>
+                <li>
+                  Built a high-fidelity prototype for the Praxis II Showcase
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="project-figures">
+            <div
+              class="figure"
+              onclick="openLightbox('images/fig7.jpg','Figure 7: High-Fidelity Praxis II Prototype + One-pager')"
+            >
+              <img
+                src="images/fig7.jpg"
+                alt="High-fidelity Praxis II prototype"
+                onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"
+              />
+              <div class="figure-placeholder" style="display: none">
+                <div class="figure-placeholder-icon">📷</div>
+                <div class="figure-placeholder-text">images/fig7.jpg</div>
+              </div>
+              <div class="figure-caption">
+                <strong
+                  >Figure 7 — High-Fidelity Praxis II Prototype +
+                  One-pager</strong
+                >
+                <p>
+                  Full-length view of the assembled motor, telescoping pole, and
+                  cleaning head. The interchangeable heads are the primary
+                  custom-designed component.
+                </p>
+              </div>
+            </div>
+            <div
+              class="figure"
+              onclick="openLightbox('images/fig8a.jpg','Figure 8a: Praxis I Measurement Matrix')"
+            >
+              <img
+                src="images/fig8a.jpg"
+                alt="Praxis I decision matrix"
+                onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"
+              />
+              <div class="figure-placeholder" style="display: none">
+                <div class="figure-placeholder-icon">📷</div>
+                <div class="figure-placeholder-text">images/fig8a.jpg</div>
+              </div>
+              <div class="figure-caption">
+                <strong>Figure 8a — Praxis I Measurement Matrix</strong>
+                <p>
+                  Measurement matrix comparing wrap elevator, lipstick, sandwurm
+                  and lightsaber designs against criteria including
+                  single-handed use and spillage containment.
+                </p>
+              </div>
+            </div>
+            <div
+              class="figure"
+              onclick="openLightbox('images/fig8b.jpg','Figure 8b: Praxis II Pugh Chart')"
+            >
+              <img
+                src="images/fig8b.jpg"
+                alt="Praxis II decision matrix"
+                onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"
+              />
+              <div class="figure-placeholder" style="display: none">
+                <div class="figure-placeholder-icon">📷</div>
+                <div class="figure-placeholder-text">images/fig8b.jpg</div>
+              </div>
+              <div class="figure-caption">
+                <strong>Figure 8b — Praxis II Pugh Chart</strong>
+                <p>
+                  Pugh chart evaluating tripod, robot, vacuum concepts among
+                  others, with the electric brush and replaceable head solutions
+                  highlighted as top performers.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="annotation-block">
+          <span class="annotation-label">// Annotation</span>
+          <p>
+            The most important decision in this project happened before we
+            generated a single concept. Reframing the problem around preserving
+            the natural flow of climbing allowed us to later eliminate concepts
+            solving the wrong problem. The wall-scaling robot was creative;
+            however, a robot that surprises climbers and throws them off their
+            rhythm is not ideal.
+          </p>
+          <p>
+            The parallel concept exploration of the electric motor, tripod
+            design, and exchangeable heads allowed each direction to be
+            developed further before comparing them. By exploring the motor and
+            exchangeable head designs in more detail, we realized they might
+            pair well together, which we confirmed through Pugh charts and
+            measurement matrices.
+          </p>
+          <p>
+            The high-fidelity Showcase prototype also taught me something about
+            representation and feedback. A working, polished prototype gives
+            people something concrete to react to. The questions I received
+            about battery life and head replacement were more specific and
+            useful than any internal team discussion I could have constructed.
+          </p>
+          <p>
+            Comparing this project to Praxis I: in Praxis I, I relied on
+            intuition to navigate convergence and the decision record was weak.
+            In Praxis II, every major choice was documented and defensible. That
+            shift — from implicit to explicit reasoning — is the clearest
+            evidence of growth I can point to across this portfolio.
+          </p>
+        </div>
+      </div>
+
+      <!-- CTMF GRID -->
+      <div class="ctmf-grid">
+        <!-- FRAME -->
+        <div class="sec strand-frame fade-in" id="frame">
+          <div class="strand-header">
+            <div class="strand-pill">Frame</div>
+            <div class="strand-title">Framing the Problem</div>
+          </div>
+          <div class="ctmf-card">
+            <div class="ctmf-num">CTMF 01</div>
+            <div class="ctmf-name">Problem Reframing</div>
+            <span class="ctmf-label">What it is</span>
+            <p class="ctmf-body">
+              Reframing involves redefining the design problem to better align
+              with actual user needs, often by identifying and challenging
+              assumptions embedded in the original problem statement.
+            </p>
+            <span class="ctmf-label">Evidence of Use</span>
+            <ul class="evidence-list">
+              <li>
+                <strong>Praxis II:</strong> Reframed from "cleaning climbing
+                holds" to "cleaning holds between climbs," identifying the gap
+                between scheduled maintenance and in-session need.
+                <a class="fig-ref" href="#praxis2">Fig 7</a>
+              </li>
+              <li>
+                <strong>Praxis I:</strong> Reframed from "food containers" to "a
+                container for students eating wraps while studying."
+                <a class="fig-ref" href="#praxis1">Fig 2</a>
+              </li>
+              <li>
+                <strong>CIV102 (retrospective):</strong> We accepted "maximize
+                load capacity" as the complete problem statement without asking
+                whether there were failure modes outside the analytical scope.
+                <a class="fig-ref" href="#civ102">Fig 5</a>
+              </li>
+            </ul>
+            <span class="ctmf-label">Assessment</span>
+            <div class="assessment-box">
+              <p>
+                Reframing is essential in any engineering design task I now
+                undertake. The CIV102 example highlights the cost of omitting
+                it: had I asked "what are we assuming is not a problem?" during
+                framing, the support condition might have emerged as a risk. I
+                now use that question as a standard prompt during every framing
+                phase.
+              </p>
+            </div>
+          </div>
+          <div class="ctmf-card">
+            <div class="ctmf-num">CTMF 02</div>
+            <div class="ctmf-name">Stakeholder-Focused Framing</div>
+            <span class="ctmf-label">What it is</span>
+            <p class="ctmf-body">
+              Defining the design problem based on the specific needs,
+              behaviours, and context of real users, rather than an abstract
+              user population.
+            </p>
+            <span class="ctmf-label">Evidence of Use</span>
+            <ul class="evidence-list">
+              <li>
+                <strong>Praxis I:</strong> Focused on students eating wraps in
+                study environments, shaping portability and mess-minimization
+                requirements directly.
+                <a class="fig-ref" href="#praxis1">Fig 3</a>
+              </li>
+              <li>
+                <strong>Praxis II:</strong> Focused on climbers between climbs,
+                as a means of supporting the weekly deep-cleans the climbing gym
+                already has in place.
+                <a class="fig-ref" href="#praxis2">Fig 8b</a>
+              </li>
+            </ul>
+            <span class="ctmf-label">Assessment</span>
+            <div class="assessment-box">
+              <p>
+                Naming the user and context precisely makes requirements more
+                specific and allows space to design a solution that addresses a
+                real need. The risk in my workflow is over-specification: in
+                Praxis II, I focused tightly on the between-climb climber and
+                gave insufficient attention to gym staff, who would ultimately
+                purchase and maintain the tool.
+              </p>
+            </div>
+          </div>
+          <div class="ctmf-card">
+            <div class="ctmf-num">CTMF 03</div>
+            <div class="ctmf-name">Assumptions &amp; Constraints Mapping</div>
+            <span class="ctmf-label">What it is</span>
+            <p class="ctmf-body">
+              Explicitly listing the assumptions of an assignment: users,
+              environment, and boundary conditions, and distinguishing them from
+              verified constraints before design work begins.
+            </p>
+            <span class="ctmf-label">Evidence of Use</span>
+            <ul class="evidence-list">
+              <li>
+                <strong>CIV102:</strong> We assumed the supports were a fixed
+                boundary condition rather than a design variable. This
+                assumption was never listed or examined. The bridge slid off its
+                supports at 400N. <a class="fig-ref" href="#civ102">Fig 5</a>
+              </li>
+              <li>
+                <strong>Praxis I:</strong> Explicitly questioned the assumption
+                that real food was required for testing, leading to the rock and
+                oobleck substitute approach.
+                <a class="fig-ref" href="#praxis1">Fig 4</a>
+              </li>
+            </ul>
+            <span class="ctmf-label">Assessment</span>
+            <div class="assessment-box">
+              <p>
+                In Praxis I, challenging an assumption informally produced a
+                better testing process. In CIV102, not challenging the support
+                assumption produced a failure that rigorous analysis could not
+                have prevented. Going forward, I will produce an explicit
+                assumptions list at the start of every project, revisit it at
+                the transition from Framing to Divergence, and again before
+                finalizing any design for testing.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- DIVERGE -->
+        <div class="sec strand-diverge fade-in" id="diverge">
+          <div class="strand-header">
+            <div class="strand-pill">Diverge</div>
+            <div class="strand-title">Expanding the Solution Space</div>
+          </div>
+          <div class="ctmf-card">
+            <div class="ctmf-num">CTMF 04</div>
+            <div class="ctmf-name">Analogical Thinking</div>
+            <span class="ctmf-label">What it is</span>
+            <p class="ctmf-body">
+              Generating design concepts by drawing parallels from unrelated
+              fields and applying the underlying mechanism to the problem at
+              hand.
+            </p>
+            <span class="ctmf-label">Evidence of Use</span>
+            <ul class="evidence-list">
+              <li>
+                <strong>Praxis I:</strong> The banana-sombrero concept emerged
+                from observing how a banana peel separates from the fruit,
+                creating a clean grip interface.
+                <a class="fig-ref" href="#praxis1">Fig 3</a>
+              </li>
+            </ul>
+            <span class="ctmf-label">Assessment</span>
+            <div class="assessment-box">
+              <p>
+                Analogical thinking is where my strongest ideas originate. The
+                banana-sombrero was not the final design, but it shifted the
+                team's thinking toward a peeling mechanism that influenced the
+                sandwurm's sliding sleeve. The limitation is that analogies can
+                mislead: a mechanism that works in one domain may not transfer
+                cleanly into another. I have learned to test analogical concepts
+                early rather than developing them fully before checking
+                viability.
+              </p>
+            </div>
+          </div>
+          <div class="ctmf-card">
+            <div class="ctmf-num">CTMF 05</div>
+            <div class="ctmf-name">Brainwriting (6-3-5 Method)</div>
+            <span class="ctmf-label">What it is</span>
+            <p class="ctmf-body">
+              A structured ideation method where team members simultaneously
+              generate ideas, pass sheets to the next person, and build on each
+              other's concepts, producing many ideas quickly while ensuring
+              equal participation.
+            </p>
+            <span class="ctmf-label">Evidence of Use</span>
+            <ul class="evidence-list">
+              <li>
+                <strong>Praxis I:</strong> Generated the banana-sombrero (mine),
+                lipstick-sliding mechanism (teammates), and elevator-inspired
+                design (teammates), all of which contributed to the final
+                sandwurm concept. <a class="fig-ref" href="#praxis1">Fig 3</a>
+              </li>
+            </ul>
+            <span class="ctmf-label">Assessment</span>
+            <div class="assessment-box">
+              <p>
+                This method worked well because it allows for idea generation
+                without criticism. I could introduce the banana-sombrero without
+                immediate dismissal, and teammates could build on it without
+                fully committing to it. Without a strong assessment phase
+                afterward, time is wasted evaluating non-viable ideas. I would
+                pair this with a convergence step before full evaluation in
+                future projects.
+              </p>
+            </div>
+          </div>
+          <div class="ctmf-card">
+            <div class="ctmf-num">CTMF 06</div>
+            <div class="ctmf-name">Parallel Concept Exploration</div>
+            <span class="ctmf-label">What it is</span>
+            <p class="ctmf-body">
+              Exploring multiple design directions simultaneously to ensure that
+              one path is not explored too deeply at the expense of other
+              possibilities.
+            </p>
+            <span class="ctmf-label">Evidence of Use</span>
+            <ul class="evidence-list">
+              <li>
+                <strong>CIV102:</strong> Each team member independently designed
+                a different cross-section geometry before comparing analytical
+                performance, leading to the hollow box and two-leg combination.
+                <a class="fig-ref" href="#civ102">Fig 6</a>
+              </li>
+              <li>
+                <strong>Praxis II:</strong> Simultaneously developed the tripod
+                device, electric toothbrush design, and exchangeable heads
+                before converging through structured comparison.
+                <a class="fig-ref" href="#praxis2">Fig 8b</a>
+              </li>
+            </ul>
+            <span class="ctmf-label">Assessment</span>
+            <div class="assessment-box">
+              <p>
+                This approach consistently prevented anchoring on the first
+                promising option. However, parallel exploration can create
+                division in the team, with each member attached to their own
+                concept. Pairing it with decision matrices ensures that
+                convergence is driven by criteria rather than advocacy.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- CONVERGE -->
+        <div class="sec strand-converge fade-in" id="converge">
+          <div class="strand-header">
+            <div class="strand-pill">Converge</div>
+            <div class="strand-title">Selecting and Refining</div>
+          </div>
+          <div class="ctmf-card">
+            <div class="ctmf-num">CTMF 07</div>
+            <div class="ctmf-name">Iterative Prototyping &amp; Testing</div>
+            <span class="ctmf-label">What it is</span>
+            <p class="ctmf-body">
+              Designing and testing physical or functional models to evaluate
+              performance, reveal hidden constraints, and refine designs through
+              cycles of build-test-learn.
+            </p>
+            <span class="ctmf-label">Evidence of Use</span>
+            <ul class="evidence-list">
+              <li>
+                <strong>Praxis I:</strong> Tested wrap designs using rocks and
+                oobleck, recorded spillage on 3D-printed and cardboard
+                containers. <a class="fig-ref" href="#praxis1">Fig 4</a>
+              </li>
+              <li>
+                <strong>Praxis II:</strong> Built a high-fidelity functional
+                prototype and tested different brush heads on climbing holds.
+                <a class="fig-ref" href="#praxis2">Fig 7</a>
+              </li>
+              <li>
+                <strong>CIV102:</strong> The support-slip failure was only
+                discoverable through physical testing; no analytical model
+                predicted it. <a class="fig-ref" href="#civ102">Fig 5</a>
+              </li>
+            </ul>
+            <span class="ctmf-label">Assessment</span>
+            <div class="assessment-box">
+              <p>
+                All three projects confirm the same principle: the real world
+                reveals something the model did not predict. The key is managing
+                resources and deciding on prototype fidelity appropriate to the
+                goal. I am becoming more deliberate about choosing a prototyping
+                approach that fits the question being asked, rather than
+                defaulting to the most complete version possible.
+              </p>
+            </div>
+          </div>
+          <div class="ctmf-card">
+            <div class="ctmf-num">CTMF 08</div>
+            <div class="ctmf-name">Decision-Making Tools</div>
+            <p
+              class="ctmf-body"
+              style="
+                font-size: 11px;
+                margin-top: 0.2rem;
+                margin-bottom: 0.65rem;
+                font-family: 'JetBrains Mono', monospace;
+                letter-spacing: 0.06em;
+                color: var(--muted2);
+              "
+            >
+              Pugh Chart · Measurement Matrix · Pairwise Comparison
+            </p>
+            <span class="ctmf-label">What it is</span>
+            <p class="ctmf-body">
+              Structured methods for comparing possible designs against defined
+              criteria, and comparing the criteria against themselves, to reduce
+              the influence of individual bias.
+            </p>
+            <span class="ctmf-label">Evidence of Use</span>
+            <ul class="evidence-list">
+              <li>
+                <strong>Praxis I:</strong> Used to evaluate the lipstick,
+                elevator, and sandwurm designs against criteria including
+                single-handed use, spillage containment, and ease of setup.
+                <a class="fig-ref" href="#praxis2">Fig 8a</a>
+              </li>
+              <li>
+                <strong>Praxis II:</strong> Used pairwise comparison and a
+                measurement matrix to evaluate the tripod, electric toothbrush,
+                and exchangeable heads concepts against criteria including setup
+                time and cleaning effectiveness.
+                <a class="fig-ref" href="#praxis2">Fig 8b</a>
+              </li>
+            </ul>
+            <span class="ctmf-label">Assessment</span>
+            <div class="assessment-box">
+              <p>
+                In Praxis II, the telescopic pole solution was not the most
+                creative concept, but the matrix made trade-offs visible and the
+                outcome defensible. It is important to note that the tool is
+                only as good as the set of requirements chosen; that judgment
+                still has to come from the team.
+              </p>
+            </div>
+          </div>
+          <div class="ctmf-card">
+            <div class="ctmf-num">CTMF 09</div>
+            <div class="ctmf-name">
+              Analytical Optimization (Envelope Calculations)
+            </div>
+            <span class="ctmf-label">What it is</span>
+            <p class="ctmf-body">
+              Using mathematical models to determine worst-case internal forces
+              across a system and optimize design parameters to perform reliably
+              under those conditions.
+            </p>
+            <span class="ctmf-label">Evidence of Use</span>
+            <ul class="evidence-list">
+              <li>
+                <strong>CIV102:</strong> Used shear and moment envelope
+                calculations to identify critical cross-section locations and
+                guide selection of hollow box vs. two-leg geometries at
+                different bridge spans.
+                <a class="fig-ref" href="#civ102">Fig 6</a>
+              </li>
+            </ul>
+            <span class="ctmf-label">Assessment</span>
+            <div class="assessment-box">
+              <p>
+                The bridge failure was not a failure of this tool; it was a
+                failure of scoping. I applied it correctly within its domain and
+                did not ask what it was failing to capture. Before finalizing
+                any analysis, I now ask: what physical conditions exist at the
+                edges of this model, and have we designed for them?
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- REPRESENT -->
+        <div class="sec strand-represent fade-in" id="represent">
+          <div class="strand-header">
+            <div class="strand-pill">Represent</div>
+            <div class="strand-title">Communicating the Design</div>
+          </div>
+          <div class="ctmf-card">
+            <div class="ctmf-num">CTMF 10</div>
+            <div class="ctmf-name">Annotated Engineering Sketching</div>
+            <span class="ctmf-label">What it is</span>
+            <p class="ctmf-body">
+              Creating sketches with annotations that communicate the intent of
+              the design and the reasoning behind it — not just what the design
+              looks like, but why it is designed that way.
+            </p>
+            <span class="ctmf-label">Evidence of Use</span>
+            <ul class="evidence-list">
+              <li>
+                <strong>Praxis I:</strong> Annotated sketches of the
+                banana-sombrero and sandwurm concepts, explaining the mechanical
+                rationale for each geometric feature.
+                <a class="fig-ref" href="#praxis1">Fig 3</a>
+              </li>
+              <li>
+                <strong>CIV102:</strong> Cross-section sketches annotating the
+                relationship between geometry and moment/shear resistance at
+                each bridge location.
+                <a class="fig-ref" href="#civ102">Fig 6</a>
+              </li>
+            </ul>
+            <span class="ctmf-label">Assessment</span>
+            <div class="assessment-box">
+              <p>
+                If I cannot annotate a design feature clearly, it is often
+                because I do not fully understand why it exists. Annotating also
+                allows me to revisit past work with clarity. The limitation is
+                audience: at Showcase, physical prototypes generated more useful
+                interaction than sketches. Sketching is primarily a design
+                thinking tool, best used in combination with a physical
+                prototype during presentations.
+              </p>
+            </div>
+          </div>
+          <div class="ctmf-card">
+            <div class="ctmf-num">CTMF 11</div>
+            <div class="ctmf-name">Functional System Integration</div>
+            <span class="ctmf-label">What it is</span>
+            <p class="ctmf-body">
+              Assembling a working design representation by combining existing,
+              tested components rather than designing every subsystem from
+              scratch.
+            </p>
+            <span class="ctmf-label">Evidence of Use</span>
+            <ul class="evidence-list">
+              <li>
+                <strong>Praxis II:</strong> Combined an electric motor from an
+                at-home cleaning device with a telescoping window-cleaning pole
+                to produce a working prototype with extended-reach,
+                rotating-head functionality. The interchangeable heads were the
+                primary custom-designed component.
+                <a class="fig-ref" href="#praxis2">Fig 7</a>
+              </li>
+            </ul>
+            <span class="ctmf-label">Assessment</span>
+            <div class="assessment-box">
+              <p>
+                The value of this approach is that it produces something real
+                that stakeholders can interact with. The Showcase prototype
+                functioned, and judges asked specific questions about battery
+                life and head replacement that no static representation would
+                have generated. The trade-off is optimization: integrating
+                existing subsystems introduces compatibility constraints.
+              </p>
+            </div>
+          </div>
+          <div class="ctmf-card">
+            <div class="ctmf-num">CTMF 12</div>
+            <div class="ctmf-name">One-Pager</div>
+            <span class="ctmf-label">What it is</span>
+            <p class="ctmf-body">
+              A structured summary that communicates project context, process,
+              and outcome to an unfamiliar audience, combining visual and
+              written elements in a tight format.
+            </p>
+            <span class="ctmf-label">Evidence of Use</span>
+            <ul class="evidence-list">
+              <li>
+                <strong>Praxis II:</strong> Produced a one-pager for the
+                Engineering Showcase summarizing the climbing hold cleaning tool
+                for students, faculty, and industry visitors.
+                <a class="fig-ref" href="#praxis2">Fig 7</a>
+              </li>
+            </ul>
+            <span class="ctmf-label">Assessment</span>
+            <div class="assessment-box">
+              <p>
+                Summarizing months of work in one page requires high levels of
+                prioritization. The process revealed which aspects of the design
+                were genuinely impressive and which were more simple. I plan to
+                use the one-pager format in future projects as a mid-process
+                communication tool, not only as a final deliverable, so that
+                important ideas generated halfway through the design phase are
+                not forgotten.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- /ctmf-grid -->
+
+      <!-- REFLECTION -->
+      <div class="sec fade-in" id="reflection">
+        <span class="section-tag">// Final Reflection</span>
+        <h2>Development as a Designer</h2>
+        <div class="reflection-text">
+          <p>
+            If I could go back to September and tell myself one thing, it would
+            be this: the part of the problem you are most comfortable with is
+            not the whole problem.
+          </p>
+          <p>
+            In Praxis I, I was comfortable generating ideas, so I generated a
+            lot of them and spent less time thinking about how to evaluate them.
+            The sandwurm was the right outcome, but I got there through common
+            sense more than through rigour. At the time, I thought that was
+            fine. Looking back, I realize rigorous testing would have added
+            great value to the project and credibility as a whole.
+          </p>
+          <p>
+            In CIV102, I was comfortable with structural analysis, so I did it
+            thoroughly and assumed that thoroughness was enough. The envelope
+            calculations were correct. The bridge still failed. The part I was
+            not comfortable with — namely the support interface, the friction
+            conditions, the boundary — these were the parts that ended the
+            design. I had treated the edge of my model as the edge of the
+            problem.
+          </p>
+          <p>
+            By Praxis II, I had started to ask a different question at each
+            stage: <em>what am I not looking at?</em> I used that question to
+            reframe the problem before diverging, to evaluate concepts against
+            explicit criteria instead of intuition, and to check what the
+            decision matrix was not capturing before committing to a final
+            design. The prototype we brought to Showcase was the strongest
+            design I have been part of — not because the idea was the most
+            creative, but because the process behind it was the most deliberate.
+          </p>
+          <p>
+            I do not think I have fully fixed my weaknesses. I still gravitate
+            toward the parts of a problem I find I can handle better, and I
+            still have to consciously pull my attention toward the edges. But I
+            now know that is where the failures live, and I know to look there.
+          </p>
+          <p>
+            The robotics workshop taught me that the best solution is not always
+            the one that solves the problem directly; sometimes it is the one
+            that changes what the problem is. That is how I want to approach
+            engineering design.
+          </p>
+        </div>
+      </div>
+
+      <!-- REFERENCES -->
+      <div class="sec fade-in" id="references">
+        <span class="section-tag">// References</span>
+        <h2>References</h2>
+        <div class="ref-item">
+          <div class="ref-num">01</div>
+          <div class="placeholder-ref">
+            Writing in Engineering (A Brief Guide) — Robert Irish
+          </div>
+        </div>
+        <div class="ref-item">
+          <div class="ref-num">02</div>
+          <div class="placeholder-ref">CIV102 Course Notes</div>
+        </div>
+        <div class="ref-item">
+          <div class="ref-num">03</div>
+          <div class="placeholder-ref">Praxis II Lecture Slides</div>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      // Lightbox
+      function openLightbox(src, caption) {
+        document.getElementById("lightbox-img").src = src;
+        document.getElementById("lightbox-caption").textContent = caption;
+        document.getElementById("lightbox").classList.add("open");
+        document.body.style.overflow = "hidden";
+      }
+      function closeLightbox() {
+        document.getElementById("lightbox").classList.remove("open");
+        document.body.style.overflow = "";
+      }
+      document
+        .getElementById("lightbox")
+        .addEventListener("click", function (e) {
+          if (e.target === this) closeLightbox();
+        });
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") closeLightbox();
+      });
+
+      // Active nav on scroll
+      const links = document.querySelectorAll(".nav-link");
+      const obs = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              links.forEach((l) => l.classList.remove("active"));
+              const a = document.querySelector(
+                '.nav-link[href="#' + e.target.id + '"]'
+              );
+              if (a) a.classList.add("active");
+            }
+          });
+        },
+        { threshold: 0.2 }
+      );
+      document.querySelectorAll("[id]").forEach((s) => obs.observe(s));
+
+      // Fade-in on scroll
+      const fo = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) e.target.classList.add("visible");
+          });
+        },
+        { threshold: 0.05 }
+      );
+      document.querySelectorAll(".fade-in").forEach((f) => fo.observe(f));
+    </script>
+  </body>
+</html>
